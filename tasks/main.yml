@@ -1,0 +1,45 @@
+---
+# tasks file for base
+
+- sysctl:
+    name: vm.max_map_count
+    value: 262144
+
+- sysctl:
+    name: fs.file-max
+    value: 131072
+
+- lineinfile:
+    dest: /etc/security/limits.conf
+    state: present
+    regexp: '.+?soft\s*nproc'
+    line: '*                soft    nproc           131072'
+
+- lineinfile:
+    dest: /etc/security/limits.conf
+    state: present
+    regexp: '.+?hard\s*nproc'
+    line: '*                 hard     nproc          131072'
+
+- lineinfile:
+    dest: /etc/security/limits.conf
+    state: present
+    regexp: '.+?soft\s*nofile'
+    line: '*                 soft     nofile          131072'
+
+- lineinfile:
+    dest: /etc/security/limits.conf
+    state: present
+    regexp: '.+?hard\s*nofile'
+    line: '*                 hard     nofile          131072'
+
+
+- apt:
+    name: "{{ item }}" 
+    state: latest
+    update_cache: yes
+  with_items: 
+    - libsasl2-dev 
+    - python-dev 
+    - libldap2-dev 
+    - libssl-dev
